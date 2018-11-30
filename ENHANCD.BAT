@@ -25,6 +25,11 @@ IF "%~1" == "-" (
 	FOR /F "delims=" %%I IN ('DIR /AD /B ^| fzy.exe') DO (
 		CD /D %%I
 	)
+) ELSE IF "%~1" == "..." (
+	CALL :LIST_PARENTS > "%ENHANCD_DIR%.parents"
+	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_DIR%.parents"') DO (
+		CD /D %%I
+	)
 ) ELSE (
 	CALL :GENERATE_REVERSE_LOG
 	FOR /F "delims=" %%I IN ('fzy.exe -e "%*" ^< "%ENHANCD_LOG%.reversed" ^| fzy.exe') DO (
@@ -76,11 +81,14 @@ EXIT /B
 	EXIT /B
 
 
-REM :RELATIVE_PATH
-REM 	SETLOCAL
-REM 	FOR /F "usebackq delims=" %%I IN ("%ENHANCD_LOG%") DO (
-REM 		SET ENHANCD_LINE=%%I
-REM 		ECHO %ENHANCD_LINE:%__CD__%=%
-REM 	)
-REM 	ENDLOCAL
-REM 	EXIT /B
+:LIST_PARENTS
+	SETLOCAL
+	:LIST_PARENTS_LOOP
+	CD ..>NUL 2>&1
+	CD
+	FOR /F "tokens=1,2 delims=\" %%I IN ("%__CD__%") DO (
+		IF NOT "%%~J" == "" GOTO :LIST_PARENTS_LOOP
+	)
+	ENDLOCAL
+	EXIT /B
+
