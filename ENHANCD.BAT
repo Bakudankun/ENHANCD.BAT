@@ -6,14 +6,19 @@ SET ENHANCD_LOG=%ENHANCD_DIR%\enhancd.log
 IF NOT EXIST "%ENHANCD_DIR%" MKDIR "%ENHANCD_DIR%"
 IF NOT EXIST "%ENHANCD_LOG%" TYPE NUL > "%ENHANCD_LOG%"
 
-IF NOT "%~1" == "" (
+IF "%~1" == "" (
+	CD /D %USERPROFILE%
+	GOTO :AFTER_CD
+)
+
+IF NOT "%~1" == "." IF NOT "%~1" == "..." (
 	CD %* >NUL 2>&1
 	IF NOT ERRORLEVEL 1 GOTO :AFTER_CD
 )
 
 CALL :GENERATE_REVERSE_LOG
 
-IF "%~1" == "" (
+IF "%~1" == "-" (
 	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.reversed"') DO (
 		CD /D %%I
 	)
@@ -31,10 +36,6 @@ GOTO :AFTER_CD
 
 
 :AFTER_CD
-REM FOR /F "delims=" %%I IN ('DIR /AD /B') DO (
-REM 	CALL :ADD_LINE_TO_LOG %__CD__%%%I
-REM )
-
 FOR /F "delims=" %%I IN ('CD') DO SET ENHANCD_CD=%%I
 CALL :ADD_LINE_TO_LOG %ENHANCD_CD%
 SET ENHANCD_CD=
