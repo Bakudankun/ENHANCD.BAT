@@ -16,29 +16,38 @@ IF NOT "%~1" == "." IF NOT "%~1" == "..." (
 	IF NOT ERRORLEVEL 1 GOTO :AFTER_CD
 )
 
-IF "%~1" == "-" (
-	CALL :GENERATE_REVERSE_LOG
-	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.reversed"') DO (
-		CD /D %%I
-	)
-) ELSE IF "%~1" == "." (
+IF "%~1" == "." (
 	FOR /F "delims=" %%I IN ('DIR /AD /B ^| fzy.exe') DO (
 		CD /D %%I
 	)
-) ELSE IF "%~1" == "..." (
+	GOTO :AFTER_CD
+)
+
+IF "%~1" == "..." (
 	CALL :LIST_PARENTS > "%ENHANCD_DIR%.parents"
 	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_DIR%.parents"') DO (
 		CD /D %%I
 	)
-) ELSE (
-	CALL :GENERATE_REVERSE_LOG
+	GOTO :AFTER_CD
+)
+
+REM Other methods require reversed log.
+CALL :GENERATE_REVERSE_LOG
+
+IF "%~1" == "-" (
+	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.reversed"') DO (
+		CD /D %%I
+	)
+	GOTO :AFTER_CD
+)
+
+REM Filter logs with given argument.
+(
 	FOR /F "delims=" %%I IN ('fzy.exe -e "%*" ^< "%ENHANCD_LOG%.reversed" ^| fzy.exe') DO (
 		CD /D %%I
 	)
+	GOTO :AFTER_CD
 )
-
-GOTO :AFTER_CD
-
 
 :AFTER_CD
 FOR /F "delims=" %%I IN ('CD') DO SET ENHANCD_CD=%%I
