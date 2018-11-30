@@ -16,9 +16,8 @@ IF NOT "%~1" == "." IF NOT "%~1" == "..." (
 	IF NOT ERRORLEVEL 1 GOTO :AFTER_CD
 )
 
-CALL :GENERATE_REVERSE_LOG
-
 IF "%~1" == "-" (
+	CALL :GENERATE_REVERSE_LOG
 	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.reversed"') DO (
 		CD /D %%I
 	)
@@ -27,6 +26,7 @@ IF "%~1" == "-" (
 		CD /D %%I
 	)
 ) ELSE (
+	CALL :GENERATE_REVERSE_LOG
 	FOR /F "delims=" %%I IN ('fzy.exe -e "%*" ^< "%ENHANCD_LOG%.reversed" ^| fzy.exe') DO (
 		CD /D %%I
 	)
