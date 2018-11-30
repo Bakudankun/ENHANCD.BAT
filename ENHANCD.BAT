@@ -82,8 +82,10 @@ EXIT /B
 		SET LINE!I!=%%J
 	)
 
-	FOR /L %%C IN (!I!,-1,1) DO (
-		ECHO !LINE%%C!>> "%ENHANCD_LOG%.reversed"
+	FOR /F "delims=" %%K IN ('CD') DO (
+		FOR /L %%C IN (!I!,-1,1) DO (
+				IF NOT "%%~K" == "!LINE%%C!" ECHO !LINE%%C!>> "%ENHANCD_LOG%.reversed"
+		)
 	)
 
 	ENDLOCAL
