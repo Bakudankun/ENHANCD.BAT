@@ -84,7 +84,7 @@ EXIT /B
 
 	FOR /F "delims=" %%K IN ('CD') DO (
 		FOR /L %%C IN (!I!,-1,1) DO (
-				IF NOT "%%~K" == "!LINE%%C!" ECHO !LINE%%C!>> "%ENHANCD_LOG%.reversed"
+			IF NOT "%%~K" == "!LINE%%C!" ECHO !LINE%%C!>> "%ENHANCD_LOG%.reversed"
 		)
 	)
 
