@@ -38,6 +38,7 @@ IF "%~1" == "" (
 
 REM Filter logs with given argument.
 (
+	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
 	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" -e "%*" < "%ENHANCD_LOG%.tmp" | "%ENHANCD_FZY:)=^)%""') DO (
 		CD /D %%I
 	)
