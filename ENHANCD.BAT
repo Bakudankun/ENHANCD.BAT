@@ -49,7 +49,7 @@ REM Filter logs with given argument.
 	CD
 	ECHO %USERPROFILE%
 	TYPE "%ENHANCD_LOG%"
-	FOR /F "delims=" %%I IN ('DIR /AD /B') DO ECHO %%~fI
+	FOR /D %%I IN (*) DO ECHO %%~fI
 	CALL :LIST_PARENTS
 ) > "%ENHANCD_LOG%.tmp"
 CALL :UNIQUE "%ENHANCD_LOG%.tmp" > "%ENHANCD_LOG%"
