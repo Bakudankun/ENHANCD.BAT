@@ -61,9 +61,9 @@ EXIT /B
 	SETLOCAL ENABLEDELAYEDEXPANSION
 
 	IF "%__CD__:~3%" == "" (
-		SET STRING=%__CD__%
+		SET STRING=!__CD__!
 	) ELSE (
-		SET STRING=%__CD__:~0,-1%
+		SET STRING=!__CD__:~0,-1!
 	)
 	SET STRING=%STRING:\=\\%
 
