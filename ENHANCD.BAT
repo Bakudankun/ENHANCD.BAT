@@ -20,10 +20,16 @@ IF "%~1" == "..." (
 	GOTO :AFTER_CD
 )
 
-REM Other methods require the log which excludes current directory.
-CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
+IF "%~1" == "-" (
+	CALL :LIST_LOG_EXCEPT_CD %ENHANCD_HYPHEN_NUM% > "%ENHANCD_LOG%.tmp"
+	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.tmp"') DO (
+		CD /D %%I
+	)
+	GOTO :AFTER_CD
+)
 
 IF "%~1" == "" (
+	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
 	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.tmp"') DO (
 		CD /D %%I
 	)
@@ -54,9 +60,22 @@ EXIT /B
 :LIST_LOG_EXCEPT_CD
 	SETLOCAL ENABLEDELAYEDEXPANSION
 
-	FOR /F "delims=" %%I IN ('CD') DO (
-		SET STRING=%%I
-		FINDSTR /X /V /C:"!STRING:\=\\!" "%ENHANCD_LOG%"
+	IF "%__CD__:~3%" == "" (
+		SET STRING=%__CD__%
+	) ELSE (
+		SET STRING=%__CD__:~0,-1%
+	)
+	SET STRING=%STRING:\=\\%
+
+	IF "%1" == "" (
+		FINDSTR /X /V /C:"%STRING%" "%ENHANCD_LOG%"
+	) ELSE (
+		SET LIMIT=%1
+		FOR /F "delims=" %%I IN ('FINDSTR /X /V /C:"%STRING%" "%ENHANCD_LOG%"') DO (
+			IF "!LIMIT!" == "0" GOTO :EOF
+			ECHO %%I
+			SET /A LIMIT=!LIMIT! - 1
+		)
 	)
 
 	ENDLOCAL
