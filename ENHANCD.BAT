@@ -71,7 +71,7 @@ EXIT /B
 		FINDSTR /X /V /C:"%STRING%" "%ENHANCD_LOG%"
 	) ELSE (
 		SET LIMIT=%1
-		FOR /F "delims=" %%I IN ('FINDSTR /X /V /C:"%STRING%" "%ENHANCD_LOG%"') DO (
+		FOR /F "delims=" %%I IN ('FINDSTR /X /V /C:"%STRING%" /C:"%USERPROFILE%" "%ENHANCD_LOG%"') DO (
 			IF "!LIMIT!" == "0" GOTO :EOF
 			ECHO %%I
 			SET /A LIMIT=!LIMIT! - 1
