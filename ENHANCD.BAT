@@ -6,7 +6,7 @@ IF NOT "%~1" == "" IF NOT "%~1" == "." IF NOT "%~1" == "..." (
 )
 
 IF "%~1" == "." (
-	FOR /F "delims=" %%I IN ('DIR /AD /B ^| fzy.exe') DO (
+	FOR /F "delims=" %%I IN ('DIR /AD /B ^| "%ENHANCD_FZY%"') DO (
 		CD /D %%I
 	)
 	GOTO :AFTER_CD
@@ -14,7 +14,7 @@ IF "%~1" == "." (
 
 IF "%~1" == "..." (
 	CALL :LIST_PARENTS > "%ENHANCD_DIR%.tmp"
-	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_DIR%.tmp"') DO (
+	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_DIR%.tmp""') DO (
 		CD /D %%I
 	)
 	GOTO :AFTER_CD
@@ -22,7 +22,7 @@ IF "%~1" == "..." (
 
 IF "%~1" == "-" (
 	CALL :LIST_LOG_EXCEPT_CD %ENHANCD_HYPHEN_NUM% > "%ENHANCD_LOG%.tmp"
-	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.tmp"') DO (
+	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_LOG%.tmp""') DO (
 		CD /D %%I
 	)
 	GOTO :AFTER_CD
@@ -30,7 +30,7 @@ IF "%~1" == "-" (
 
 IF "%~1" == "" (
 	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
-	FOR /F "delims=" %%I IN ('fzy.exe ^< "%ENHANCD_LOG%.tmp"') DO (
+	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_LOG%.tmp""') DO (
 		CD /D %%I
 	)
 	GOTO :AFTER_CD
@@ -38,7 +38,7 @@ IF "%~1" == "" (
 
 REM Filter logs with given argument.
 (
-	FOR /F "delims=" %%I IN ('fzy.exe -e "%*" ^< "%ENHANCD_LOG%.tmp" ^| fzy.exe') DO (
+	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" -e "%*" < "%ENHANCD_LOG%.tmp" | "%ENHANCD_FZY:)=^)%""') DO (
 		CD /D %%I
 	)
 	GOTO :AFTER_CD
