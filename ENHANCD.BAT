@@ -13,8 +13,8 @@ IF "%~1" == "." (
 )
 
 IF "%~1" == "..." (
-	CALL :LIST_PARENTS > "%ENHANCD_DIR%.tmp"
-	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_DIR%.tmp""') DO (
+	CALL :LIST_PARENTS > "%ENHANCD_LOG%.tmp"
+	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_LOG%.tmp""') DO (
 		CD /D %%I
 	)
 	GOTO :AFTER_CD
