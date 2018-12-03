@@ -69,13 +69,17 @@ EXIT /B
 	SET STRING=%STRING:\=\\%
 
 	IF "%1" == "" (
-		FINDSTR /X /V /C:"%STRING%" "%ENHANCD_LOG%"
+		FOR /F "delims=" %%I IN ('FINDSTR /X /V /C:"%STRING%" "%ENHANCD_LOG%"') DO (
+			IF EXIST %%I ECHO %%I
+		)
 	) ELSE (
 		SET LIMIT=%1
 		FOR /F "delims=" %%I IN ('FINDSTR /X /V /C:"%STRING%" /C:"%USERPROFILE%" "%ENHANCD_LOG%"') DO (
 			IF "!LIMIT!" == "0" GOTO :EOF
-			ECHO %%I
-			SET /A LIMIT=!LIMIT! - 1
+			IF EXIST %%I (
+				ECHO %%I
+				SET /A LIMIT=!LIMIT! - 1
+			)
 		)
 	)
 
