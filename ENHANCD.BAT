@@ -125,22 +125,11 @@ EXIT /B
 		EXIT /B
 	)
 
-	SETLOCAL ENABLEDELAYEDEXPANSION
+	SETLOCAL
+	SET FILENAME=%~1
+	SET FILENAME=%FILENAME:'=''%
 
-	SET LINENUM=0
-	FOR /F "usebackq delims=" %%I IN ("%~1") DO (
-		FOR /L %%J IN (1,1,!LINENUM!) DO (
-			IF NOT "!CONTINUE_UNIQUE!" == "1" IF "!LINE%%J!" == "%%I" SET CONTINUE_UNIQUE=1
-		)
-		IF NOT "!CONTINUE_UNIQUE!" == "1" (
-			SET /A LINENUM=!LINENUM! + 1
-			SET LINE!LINENUM!=%%I
-			ECHO %%I
-		)
-		SET CONTINUE_UNIQUE=
-
-		IF DEFINED ENHANCD_LOG_MAX IF !LINENUM! GEQ !ENHANCD_LOG_MAX! GOTO :EOF
-	)
+	powershell.exe -Command "$foundLines = @{}; Get-Content '%FILENAME%' | %% { if (!$foundLines.ContainsKey($_)) { $foundLines.Add($_, $True); $_ }}"
 
 	ENDLOCAL
 	EXIT /B
