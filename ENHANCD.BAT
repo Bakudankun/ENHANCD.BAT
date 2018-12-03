@@ -129,7 +129,7 @@ EXIT /B
 	SET FILENAME=%~1
 	SET FILENAME=%FILENAME:'=''%
 
-	powershell.exe -Command "$foundLines = @{}; Get-Content '%FILENAME%' | %% { if (!$foundLines.ContainsKey($_)) { $foundLines.Add($_, $True); $_ }}"
+	START /B powershell.exe -Command "$foundLines = @{}; Get-Content '%FILENAME%' | %% { if (!$foundLines.ContainsKey($_)) { $foundLines.Add($_, $True); $_ }}"
 
 	ENDLOCAL
 	EXIT /B
