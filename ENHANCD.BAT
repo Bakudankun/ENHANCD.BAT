@@ -53,7 +53,7 @@ REM Filter logs with given argument.
 (
 	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
 	SET ENHANCD_CANCELLED=1
-	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" -e "%ENHANCD_ARGS%" < "%ENHANCD_LOG%.tmp" | "%ENHANCD_FZY:)=^)%""') DO (
+	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" -q "%ENHANCD_ARGS%" < "%ENHANCD_LOG%.tmp""') DO (
 		SET ENHANCD_CANCELLED=
 		CD /D %%I
 	)
