@@ -16,7 +16,7 @@ IF "%ENHANCD_ARGS%" == "." (
 IF "%ENHANCD_ARGS%" == "..." (
 	CALL :LIST_PARENTS > "%ENHANCD_LOG%.tmp"
 	SET ENHANCD_CANCELLED=1
-	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_LOG%.tmp""') DO (
+	FOR /F "delims=" %%I IN ('CALL "%ENHANCD_FZY%" ^< "%ENHANCD_LOG%.tmp"') DO (
 		SET ENHANCD_CANCELLED=
 		CD /D %%I
 	)
@@ -27,7 +27,7 @@ IF "%ENHANCD_ARGS%" == "..." (
 IF "%ENHANCD_ARGS%" == "-" (
 	CALL :LIST_LOG_EXCEPT_CD %ENHANCD_HYPHEN_NUM% > "%ENHANCD_LOG%.tmp"
 	SET ENHANCD_CANCELLED=1
-	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_LOG%.tmp""') DO (
+	FOR /F "delims=" %%I IN ('CALL "%ENHANCD_FZY%" ^< "%ENHANCD_LOG%.tmp"') DO (
 		SET ENHANCD_CANCELLED=
 		CD /D %%I
 	)
@@ -38,7 +38,7 @@ IF "%ENHANCD_ARGS%" == "-" (
 IF NOT DEFINED ENHANCD_ARGS (
 	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
 	SET ENHANCD_CANCELLED=1
-	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" < "%ENHANCD_LOG%.tmp""') DO (
+	FOR /F "delims=" %%I IN ('CALL "%ENHANCD_FZY%" ^< "%ENHANCD_LOG%.tmp"') DO (
 		SET ENHANCD_CANCELLED=
 		CD /D %%I
 	)
@@ -53,7 +53,7 @@ REM Filter logs with given argument.
 (
 	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
 	SET ENHANCD_CANCELLED=1
-	FOR /F "delims=" %%I IN ('""%ENHANCD_FZY:)=^)%" -q "%ENHANCD_ARGS%" < "%ENHANCD_LOG%.tmp""') DO (
+	FOR /F "delims=" %%I IN ('CALL "%ENHANCD_FZY%" -q "%ENHANCD_ARGS%" ^< "%ENHANCD_LOG%.tmp"') DO (
 		SET ENHANCD_CANCELLED=
 		CD /D %%I
 	)
