@@ -6,7 +6,11 @@ IF NOT EXIST "%~dp0ENHANCD.BAT" (
 )
 
 IF NOT DEFINED ENHANCD_FZY (
-	ECHO Environment variable ENHANCD_FZY must be set the path to fzy.exe.
+	FOR /F "delims=" %%I IN ('WHERE fzy.exe 2^>NUL') DO SET "ENHANCD_FZY=%%I"
+)
+
+IF NOT DEFINED ENHANCD_FZY (
+	ECHO ENHANCD.BAT requires fzy.exe. Please put it under PATH or set environment variable ENHANCD_FZY to its path.1>&2
 	EXIT /B 1
 )
 
