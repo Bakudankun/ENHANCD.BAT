@@ -65,7 +65,7 @@ REM Filter logs with given argument.
 (
 	CD
 	ECHO %USERPROFILE%
-	TYPE "%ENHANCD_LOG%"
+	FOR /F "usebackq delims=" %%I IN ("%ENHANCD_LOG%") DO IF EXIST %%I ECHO %%I
 	FOR /D %%I IN (*) DO ECHO %%~fI
 	CALL :LIST_PARENTS
 ) > "%ENHANCD_LOG%.tmp"
