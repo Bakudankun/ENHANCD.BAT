@@ -52,6 +52,17 @@ IF NOT ERRORLEVEL 1 GOTO :AFTER_CD
 REM Filter logs with given argument.
 (
 	CALL :LIST_LOG_EXCEPT_CD > "%ENHANCD_LOG%.tmp"
+
+	FOR /F "delims=" %%I IN ('CALL "%ENHANCD_FZY%" -e "%ENHANCD_ARGS%" ^< "%ENHANCD_LOG%.tmp" ^| FIND /V /C ""') DO (
+		IF %%I EQU 1 (
+			REM Filter result is single. Jump immediately.
+			FOR /F "delims=" %%J IN ('CALL "%ENHANCD_FZY%" -e "%ENHANCD_ARGS%" ^< "%ENHANCD_LOG%.tmp"') DO (
+				CD /D %%J
+				GOTO :AFTER_CD
+			)
+		)
+	)
+
 	SET ENHANCD_CANCELLED=1
 	FOR /F "delims=" %%I IN ('CALL "%ENHANCD_FZY%" -q "%ENHANCD_ARGS%" ^< "%ENHANCD_LOG%.tmp"') DO (
 		SET ENHANCD_CANCELLED=
